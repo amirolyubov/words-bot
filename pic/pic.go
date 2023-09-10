@@ -12,7 +12,7 @@ import (
 func CreatePic(word string, transcription string) (string, tgbotapi.FileBytes) {
 	path := fmt.Sprintf(`./pic/%s.png`, word)
 	const w = 1000
-	const h = 250
+	const h = 350
 	dc := gg.NewContext(w, h)
 	dc.SetRGB(1, 1, 1)
 	dc.Clear()
