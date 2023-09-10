@@ -65,7 +65,7 @@ func GenerateWordInformation(word string) (string, error) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", os.Getenv("GPT_TOKEN"))
+	req.Header.Set("Authorization", "Bearer "+os.Getenv("GPT_TOKEN"))
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
