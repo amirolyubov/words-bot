@@ -32,7 +32,7 @@ func Card(word bot.Word, chatId int64) (tgbotapi.PhotoConfig, tgbotapi.VoiceConf
 `, word.Transcription)
 	meaning := ""
 	for i, mean := range word.Meaning {
-		meaning = meaning + fmt.Sprintf(`%s. *%s*. %s
+		meaning = meaning + fmt.Sprintf(`%s. *%s.* %s
 `,
 			fmt.Sprint(i+1), mean.PartOfSpeech, mean.Explanation) + fmt.Sprintf(`_%#v_
 `, mean.Example)
