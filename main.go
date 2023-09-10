@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"words-bot/bot"
@@ -18,7 +17,6 @@ func main() {
 
 	err := <-bot.Init(os.Getenv("BOT_TOKEN"))
 	if err != nil {
-		fmt.Print(123)
 		panic(err)
 	}
 

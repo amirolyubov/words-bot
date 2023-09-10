@@ -18,8 +18,9 @@ type Translations struct {
 }
 
 type Meaning struct {
-	Explanation string `bson:"explanation" json:"explanation"`
-	Example     string `bson:"example" json:"example"`
+	Explanation  string `bson:"explanation" json:"explanation"`
+	Example      string `bson:"example" json:"example"`
+	PartOfSpeech string `bson:"part_of_speech" json:"part_of_speech"`
 }
 
 type Word struct {
@@ -27,7 +28,6 @@ type Word struct {
 	Spelling      string             `bson:"spelling"`
 	Meaning       []Meaning          `bson:"meaning"`
 	Transcription string             `bson:"transcription,omitempty"`
-	PartOfSpeech  string             `bson:"part_of_speech" json:"part_of_speech"`
 	Translations  Translations       `bson:"translations,omitempty"`
 	Synonyms      []string           `bson:"synonyms,omitempty"`
 	Error         bool               `bson:"error,omitempty" json:"error,omitempty"`
