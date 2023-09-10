@@ -9,7 +9,8 @@ COPY ./ /what-a-word
 WORKDIR /what-a-word
 
 RUN go mod download && go get -u ./...
-RUN CGO_ENABLED=0 go build -o ./app
+# RUN CGO_ENABLED=0 go build -o ./app
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main ./main.go 
 
 # second image from first one, but without preinstalled golang 
 FROM alpine:latest

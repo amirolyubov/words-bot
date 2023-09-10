@@ -13,7 +13,7 @@ import (
 
 func CreateAudio(word string) (string, tgbotapi.FileBytes) {
 	path := fmt.Sprintf("./audio/%s.mp3", word)
-	speech := htgotts.Speech{Folder: "audio", Language: voices.EnglishUK, Handler: &handlers.MPlayer{}}
+	speech := htgotts.Speech{Folder: "audio", Language: voices.EnglishUK, Handler: &handlers.Native{}}
 	speech.CreateSpeechFile(word, word)
 
 	audioBytes, err := os.ReadFile(path)
