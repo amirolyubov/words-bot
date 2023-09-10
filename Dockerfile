@@ -2,6 +2,8 @@ FROM golang:1.21.1 AS builder
 
 RUN go version
 RUN apt-get install git
+RUN apt install libc6
+
 
 COPY ./ /what-a-word
 WORKDIR /what-a-word
