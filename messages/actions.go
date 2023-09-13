@@ -7,6 +7,8 @@ import (
 	"sync"
 	"words-bot/bot"
 	"words-bot/db"
+	"words-bot/dictionary"
+	"words-bot/users"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -25,7 +27,7 @@ func SendRandomWord() {
 	for cursor.Next(context.TODO()) {
 		wg.Add(1)
 
-		var user bot.User
+		var user users.User
 		err := cursor.Decode(&user)
 		if err != nil {
 			fmt.Println(err)
@@ -34,7 +36,7 @@ func SendRandomWord() {
 		if len(user.Words) > 1 {
 			go func() {
 				randWordId := user.Words[rand.Intn(len(user.Words))]
-				randWord, err := bot.GetWordById(randWordId)
+				randWord, err := dictionary.GetWordById(randWordId)
 				if err != nil {
 					fmt.Println(err)
 				}

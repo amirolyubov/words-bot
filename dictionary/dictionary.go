@@ -1,4 +1,4 @@
-package bot
+package dictionary
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"words-bot/db"
 	"words-bot/gpt"
+	"words-bot/users"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -27,6 +28,7 @@ type Word struct {
 	ID            primitive.ObjectID `bson:"_id,omitempty"`
 	Spelling      string             `bson:"spelling"`
 	Meaning       []Meaning          `bson:"meaning"`
+	Language      string             `bson:"language,omitempty"`
 	Transcription string             `bson:"transcription,omitempty"`
 	Translations  Translations       `bson:"translations,omitempty"`
 	Synonyms      []string           `bson:"synonyms,omitempty"`
@@ -95,7 +97,7 @@ func AddWordToDictionary(wordId primitive.ObjectID, userId int64) error {
 	}
 	options := options.FindOneAndUpdate().SetReturnDocument(options.After)
 
-	var user User
+	var user users.User
 
 	err := collection.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {
@@ -126,7 +128,7 @@ func CheckWordExistingInUserDictionary(wordId primitive.ObjectID, userId int64) 
 
 	filter := bson.D{{Key: "tg_id", Value: userId}}
 
-	var user User
+	var user users.User
 
 	err := collection.FindOne(context.TODO(), filter).Decode(&user)
 	if err != nil {

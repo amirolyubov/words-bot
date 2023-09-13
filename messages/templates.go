@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 	"words-bot/audio"
-	"words-bot/bot"
+	"words-bot/dictionary"
 	"words-bot/pic"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -16,7 +16,7 @@ func BlankMessage(text string, chatId int64) tgbotapi.MessageConfig {
 	return msg
 }
 
-func Card(word bot.Word, chatId int64) (tgbotapi.PhotoConfig, tgbotapi.VoiceConfig) {
+func Card(word dictionary.Word, chatId int64) (tgbotapi.PhotoConfig, tgbotapi.VoiceConfig) {
 	picPath, picBytes := pic.CreatePic(word.Spelling, word.Transcription)
 	_, audioBytes := audio.CreateAudio(word.Spelling)
 

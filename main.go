@@ -5,8 +5,10 @@ import (
 	"os"
 	"words-bot/bot"
 	"words-bot/db"
+	"words-bot/dictionary"
 	"words-bot/messages"
 	"words-bot/schedule"
+	"words-bot/users"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -37,7 +39,7 @@ func main() {
 
 			if update.Message.IsCommand() {
 				if update.Message.Text == "/start" {
-					err := bot.CreateNewUser(update.Message.From.ID, update.Message.From.UserName)
+					err := users.CreateNewUser(update.Message.From.ID, update.Message.From.UserName)
 					if err != nil {
 						msg.Text = "you are already here"
 					} else {
@@ -47,7 +49,26 @@ func main() {
 				}
 				tgbot.Send(msg)
 			} else {
-				messages.Send(update.Message.Text, update.Message.From.ID, "")
+				tgbot := bot.GetBot()
+
+				word, err := dictionary.GetWord(update.Message.Text)
+				if err != nil {
+					word, err = dictionary.CreateNewWord(update.Message.Text)
+					if err != nil {
+						msg := messages.BlankMessage("There is no word like this :|", update.Message.From.ID)
+						tgbot.Send(msg)
+						return
+					}
+				}
+
+				isWordAlreadyInDict := dictionary.AddWordToDictionary(word.ID, update.Message.From.ID)
+
+				card, audio := messages.Card(word, update.Message.From.ID)
+				if isWordAlreadyInDict != nil {
+					card.Caption = card.Caption + "\n\n_already in your dict_"
+				}
+				tgbot.Send(card)
+				tgbot.Send(audio)
 			}
 		}
 	}
