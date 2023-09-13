@@ -18,7 +18,7 @@ func BlankMessage(text string, chatId int64) tgbotapi.MessageConfig {
 
 func Card(word bot.Word, chatId int64) (tgbotapi.PhotoConfig, tgbotapi.VoiceConfig) {
 	picPath, picBytes := pic.CreatePic(word.Spelling, word.Transcription)
-	audioPath, audioBytes := audio.CreateAudio(word.Spelling)
+	_, audioBytes := audio.CreateAudio(word.Spelling)
 
 	audioMsg := tgbotapi.NewVoice(chatId, audioBytes)
 
@@ -52,7 +52,6 @@ func Card(word bot.Word, chatId int64) (tgbotapi.PhotoConfig, tgbotapi.VoiceConf
 	picMsg.Caption = message
 
 	pic.RemovePic(picPath)
-	audio.RemoveAudio(audioPath)
 
 	return picMsg, audioMsg
 }

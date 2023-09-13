@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	db.InitDb()
+	db.InitDb(os.Getenv("DB_URI"))
 	schedule.InitSchedule()
 
 	err := <-bot.Init(os.Getenv("BOT_TOKEN"))
@@ -47,24 +47,7 @@ func main() {
 				}
 				tgbot.Send(msg)
 			} else {
-				word, err := bot.GetWord(update.Message.Text)
-				if err != nil {
-					word, err = bot.CreateNewWord(update.Message.Text)
-					if err != nil {
-						msg := messages.BlankMessage("There is no word like this :|", update.Message.From.ID)
-						tgbot.Send(msg)
-						continue
-					}
-				}
-
-				isWordAlreadyInDict := bot.AddWordToDictionary(word.ID, update.Message.From.ID)
-
-				card, audio := messages.Card(word, update.Message.From.ID)
-				if isWordAlreadyInDict != nil {
-					card.Caption = card.Caption + "\n\n_already in your dict_"
-				}
-				tgbot.Send(card)
-				tgbot.Send(audio)
+				messages.Send(update.Message.Text, update.Message.From.ID, "")
 			}
 		}
 	}

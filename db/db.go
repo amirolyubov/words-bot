@@ -3,7 +3,6 @@ package db
 import (
 	"context"
 	"log"
-	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -11,8 +10,8 @@ import (
 
 var client *mongo.Client
 
-func GetClientOptions() *options.ClientOptions {
-	dburi := os.Getenv("DB")
+func GetClientOptions(connectionString string) *options.ClientOptions {
+	dburi := connectionString
 
 	serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
 	clientOptions := options.Client().
@@ -28,8 +27,8 @@ func GetCollection(collection string) (*mongo.Collection, error) {
 	return client.Database("words").Collection(collection), nil
 }
 
-func InitDb() {
-	clientOptions := GetClientOptions()
+func InitDb(connectionString string) {
+	clientOptions := GetClientOptions(connectionString)
 
 	newClient, err := mongo.Connect(context.TODO(), clientOptions)
 	if err != nil {

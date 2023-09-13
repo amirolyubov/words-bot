@@ -2,35 +2,31 @@ package audio
 
 import (
 	"fmt"
-	"log"
+	"io"
+	"net/http"
+	"net/url"
 	"os"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
-	htgotts "github.com/hegedustibor/htgo-tts"
-	handlers "github.com/hegedustibor/htgo-tts/handlers"
-	voices "github.com/hegedustibor/htgo-tts/voices"
 )
 
 func CreateAudio(word string) (string, tgbotapi.FileBytes) {
-	path := fmt.Sprintf("./audio/%s.mp3", word)
-	speech := htgotts.Speech{Folder: "audio", Language: voices.EnglishUK, Handler: &handlers.Native{}}
-	speech.CreateSpeechFile(word, word)
-
-	audioBytes, err := os.ReadFile(path)
+	requestURL := fmt.Sprintf("http://0.0.0.0:59125/api/tts?text=%s&voice=en_UK/apope_low&noiseScale=0.667&noiseW=0.8&lengthScale=1&ssml=false", url.QueryEscape(word))
+	res, err := http.Get(requestURL)
 	if err != nil {
-		panic(err)
+		fmt.Printf("error making http request: %s\n", err)
+		os.Exit(1)
 	}
+
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		fmt.Errorf(err.Error())
+	}
+
 	audioFileBytes := tgbotapi.FileBytes{
 		Name:  "voices",
-		Bytes: audioBytes,
+		Bytes: body,
 	}
 
-	return path, audioFileBytes
-}
-
-func RemoveAudio(path string) {
-	err := os.Remove(path)
-	if err != nil {
-		log.Fatal(err)
-	}
+	return "", audioFileBytes
 }

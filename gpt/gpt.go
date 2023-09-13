@@ -48,7 +48,7 @@ func GenerateWordInformation(word string) (string, error) {
 		Messages: []GptMessage{
 			{
 				Role:    "user",
-				Content: "найди данные для данного слова\n\nответ должен быть строго в формате json.\n ключи должны быть на аглийском языке в snakecase имена ключей следующие\n spelling,transcription, error, meaning (array of { explanation, example, part_of_speech } (если значение одно, должен быть массив с одним элементом, если значений несколько - тогда больше, length <= 6)),translations: {ru, fr}\n\nsynonims: (type array of string, length <= 5)\n\nесли ты не знаешь значения слова, пришли поле error: true\n\n" + word,
+				Content: fmt.Sprintf(`найди данные для данного слова\n\nответ должен быть строго в формате json.\n ключи должны быть на аглийском языке в snakecase имена ключей следующие\n spelling,transcription, error, meaning (array of { explanation, example, part_of_speech } (если значение одно, должен быть массив с одним элементом, если значений несколько - тогда больше, length <= 6)),translations: {ru, fr}\n\nsynonims: (type array of string, length <= 5)\n\nесли ты не знаешь значения слова, пришли поле error: true\n\nслово: "%s"`, word),
 			},
 		},
 		Temperature: 0.7,
@@ -65,7 +65,7 @@ func GenerateWordInformation(word string) (string, error) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+os.Getenv("GPT_TOKEN"))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("GPT_TOKEN")))
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {
