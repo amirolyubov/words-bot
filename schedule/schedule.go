@@ -10,7 +10,7 @@ func InitSchedule() {
 	c := cron.New(cron.WithSeconds())
 
 	c.AddFunc("0 0 11,16,20 * * *", func() { messages.SendRandomWord() })
-	// c.AddFunc("*/4 * * * * *", messages.SendRandomWord)
+	// c.AddFunc("*/10 * * * * *", messages.SendRandomWord)
 
 	c.Start()
 }

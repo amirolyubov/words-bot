@@ -10,7 +10,7 @@ import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
-func CreateAudio(word string) (string, tgbotapi.FileBytes) {
+func CreateAudio(word string) tgbotapi.FileBytes {
 	requestURL := fmt.Sprintf("http://0.0.0.0:59125/api/tts?text=%s&voice=en_UK/apope_low&noiseScale=0.667&noiseW=0.8&lengthScale=1&ssml=false", url.QueryEscape(word))
 	res, err := http.Get(requestURL)
 	if err != nil {
@@ -28,5 +28,5 @@ func CreateAudio(word string) (string, tgbotapi.FileBytes) {
 		Bytes: body,
 	}
 
-	return "", audioFileBytes
+	return audioFileBytes
 }

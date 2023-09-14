@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"words-bot/db"
 	"words-bot/gpt"
 	"words-bot/users"
@@ -141,4 +142,46 @@ func CheckWordExistingInUserDictionary(wordId primitive.ObjectID, userId int64) 
 		}
 	}
 	return false
+}
+
+func GetRandomWords(total int) ([]Word, error) {
+	collection, _ := db.GetCollection("words")
+	pipeline := []bson.D{bson.D{{"$sample", bson.D{{"size", total}}}}}
+
+	words := []Word{}
+	cursor, err := collection.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return words, err
+	}
+	for cursor.Next(context.TODO()) {
+		var word Word
+		err := cursor.Decode(&word)
+		if err != nil {
+			return words, err
+		}
+		words = append(words, word)
+	}
+	return words, nil
+}
+
+func GetRandomUserWord(userId int64) (Word, error) {
+	collection, _ := db.GetCollection("users")
+	filter := bson.D{{Key: "tg_id", Value: userId}}
+
+	var user users.User
+	var word Word
+
+	err := collection.FindOne(context.TODO(), filter).Decode(&user)
+	if err != nil {
+		return word, err
+	}
+
+	randWordId := user.Words[rand.Intn(len(user.Words))]
+	word, err = GetWordById(randWordId)
+	if err != nil {
+		return word, err
+	}
+
+	return word, nil
+
 }

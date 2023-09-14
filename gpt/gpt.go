@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"os"
+	"words-bot/utils"
 )
 
 type GptMessage struct {
@@ -41,6 +41,11 @@ type GptResponse struct {
 }
 
 func GenerateWordInformation(word string) (string, error) {
+	envs, err := utils.GetEnvs()
+	if err != nil {
+		return "", err
+	}
+
 	gptUrl := "https://api.openai.com/v1/chat/completions"
 
 	data := GptRequestBody{
@@ -65,7 +70,7 @@ func GenerateWordInformation(word string) (string, error) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", os.Getenv("GPT_TOKEN")))
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", envs.GptToken))
 	client := &http.Client{}
 	res, err := client.Do(req)
 	if err != nil {

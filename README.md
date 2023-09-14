@@ -6,4 +6,5 @@
 -   [ ] rich lang support
 -   [x] CRON
 -   [ ] games
+-   [x] quiz
 -   [ ] ...

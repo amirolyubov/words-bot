@@ -41,9 +41,8 @@ func SendRandomWord() {
 					fmt.Println(err)
 				}
 
-				card, audio := Card(randWord, user.TgID)
-				tgbot.Send(card)
-				tgbot.Send(audio)
+				msg := CardWithActions(randWord, user.TgID)
+				tgbot.Send(msg)
 
 			}()
 		}
@@ -52,5 +51,4 @@ func SendRandomWord() {
 		fmt.Println(err)
 	}
 	cursor.Close(context.TODO())
-
 }
